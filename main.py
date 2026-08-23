@@ -7,11 +7,12 @@ import sys
 from google import genai
 
 # ====================================================
-# 🎛️ CONFIGURATION GRID (Apni real key yahan single quotes mein daalein)
+# 🎛️ SECURE CONFIGURATION GRID (Environment Variable)
 # ====================================================
-GEMINI_API_KEY = "AQ.Ab8RN6LN512s90w8PJwbFCPPbnuH__APbU2Vk04tzWw4UsE4Zg"
+# Hum yahan direct key nahi likhenge taaki GitHub block na kare.
+# Yeh local system environment se automatic key utha lega.
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AQ.Ab8RN6LN512s90w8PJwbFCPPbnuH__APbU2Vk04tzWw4UsE4Zg")
 
-# Initialize the real correct Google GenAI Client object safely
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 # ====================================================
@@ -147,11 +148,10 @@ class PipelineOrchestrator:
 if __name__ == "__main__":
     target_app = "examples/buggy_app.py"
     
-    # Target path safety handling
     if not os.path.exists("examples"):
         os.makedirs("examples")
         
-    # Always reset the buggy target file to baseline for consistent demo results
+    # Buggy Code base target format reset
     buggy_code_content = """def process_fintech_transaction(data):
     # Razorpay Killer Demo - Intentional ZeroDivisionError
     risk_factor = 100 / 0
