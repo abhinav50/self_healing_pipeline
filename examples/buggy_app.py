@@ -1,7 +1,7 @@
-def process_fintech_transaction(data):
-    # Razorpay Killer Demo - Intentional ZeroDivisionError
-    risk_factor = 100
-    return f"Transaction metrics calculated: {risk_factor}"
+def execute_payment_ledger_routing(transaction_payload):
+    # System Context Simulation - Intentional ZeroDivision Error on zero-sum weights
+    system_load_weight = 100 / 0
+    return f"Ledger state update: processed with load indices {system_load_weight}"
 
 if __name__ == "__main__":
-    print(process_fintech_transaction("Razorpay Secure User"))
+    print(execute_payment_ledger_routing({"amount": 500, "token": "INR"}))
