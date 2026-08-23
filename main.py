@@ -1,98 +1,167 @@
 import os
 import re
+import json
+import time
 import subprocess
 import sys
 from google import genai
 
-# Hamara free Gemini Setup bina kisi terminal command ya environment variables ke lafde ke!
-# ⚠️ NICHE APNI APNI REAL GEMINI KEY DALEN (Jo AIzaSy... se shuru hoti hai)
-GEMINI_API_KEY = "AQ.Ab8RN6KdskGAibVsGdpTROT1FhS48mHALIsHqNNFmkI68xTDdg"
+# ====================================================
+# 🎛️ CONFIGURATION GRID (Apni real key yahan single quotes mein daalein)
+# ====================================================
+GEMINI_API_KEY = "AQ.Ab8RN6LN512s90w8PJwbFCPPbnuH__APbU2Vk04tzWw4UsE4Zg"
 
+# Initialize the real correct Google GenAI Client object safely
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-def extract_clean_code(ai_output):
-    """AI ke response se pure Python code extract karne ke liye helper"""
-    code_match = re.search(r"```python(.*?)```", ai_output, re.DOTALL)
-    if code_match:
-        return code_match.group(1).strip()
-    return ai_output.strip()
+# ====================================================
+# 🧪 MODULE 1: THE ISOLATED SANDBOX EXECUTOR
+# ====================================================
+class SandboxExecutor:
+    def __init__(self, timeout: int = 5):
+        self.timeout = timeout
 
-def run_automated_sandbox_test(file_path):
-    """Subprocess sandbox runtime testing engine"""
-    print(f"🧪 Running automated sandbox tests on {file_path}...")
-    try:
-        result = subprocess.run(
-            [sys.executable, file_path],
-            capture_output=True,
-            text=True,
-            timeout=5
+    def execute_file(self, file_path: str) -> tuple[bool, str, str]:
+        try:
+            result = subprocess.run(
+                [sys.executable, file_path],
+                capture_output=True,
+                text=True,
+                timeout=self.timeout
+            )
+            if result.returncode == 0:
+                return True, result.stdout, ""
+            else:
+                return False, result.stdout, result.stderr
+        except subprocess.TimeoutExpired:
+            return False, "", "ERR_TIMEOUT: Code execution exceeded limit."
+        except Exception as e:
+            return False, "", f"ERR_SYSTEM: Runtime crash - {str(e)}"
+
+# ====================================================
+# 🧠 MODULE 2: AI ROOT CAUSE DIAGNOSIS AGENT
+# ====================================================
+class CodeAnalyzer:
+    def diagnose_error(self, code_content: str, stderr: str) -> str:
+        prompt = f"""
+        You are an Elite Security and Code Auditor. Analyze this Python code and the accompanying runtime crash error.
+        Target Code:
+        {code_content}
+        Runtime Error Traceback:
+        {stderr}
+        Task: Pinpoint the exact line and root cause of the failure. Keep it brief and technical.
+        """
+        response = client.models.generate_content(
+            model='gemini-3.6-flash',
+            contents=prompt
         )
-        if result.returncode == 0:
-            print("🚀 Sandbox Status: ALL TESTS PASSED SUCCESSFULLY!")
-            return True, None
-        else:
-            print("⚠️ Sandbox Status: RUNTIME CRASH DETECTED!")
-            combined_error = f"STDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
-            return False, combined_error
-    except Exception as e:
-        return False, f"Execution failed pipeline crash: {str(e)}"
+        return response.text
 
-def ask_ai_to_heal_code(code_content, error_feedback=None):
-    """Gemini API se direct code heal karwane ka function"""
-    feedback_str = ""
-    if error_feedback:
-        feedback_str = f"\n\nCRITICAL: Previous patch attempt FAILED with this runtime error. Fix this too:\n{error_feedback}"
+# ====================================================
+# 🔧 MODULE 3: TARGETED MICRO-PATCH REPAIR ENGINE
+# ====================================================
+class CodeHealer:
+    def generate_patch(self, code_content: str, diagnosis: str) -> dict:
+        prompt = f"""
+        You are a Senior Core Software Engineer. Instead of rewriting the code, generate a targeted replacement patch dictionary.
+        Original Code:
+        {code_content}
+        Error Diagnosis:
+        {diagnosis}
+        
+        Return ONLY a strict JSON object mapping the exact old broken line string to the new safe replacement line string.
+        Do not change lines that are correct.
+        
+        Example Output Format:
+        {{
+            "old_line_to_replace_here": "new_healed_line_here"
+        }}
+        Ensure the JSON is wrapped in ```json ``` markdown blocks.
+        """
+        response = client.models.generate_content(
+            model='gemini-3.6-flash',
+            contents=prompt
+        )
+        
+        json_match = re.search(r"```json(.*?)```", response.text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1).strip())
+            except:
+                return {}
+        return {}
 
-    prompt = f"""
-    You are a Senior Software Engineer. Analyze the following Python code for any hidden bugs, potential crashes, or unexpected runtime failures. 
-    Rewrite the entire Python code to be completely safe, resilient, and handle all edge cases.
-    
-    Target Code:
-    {code_content}
-    {feedback_str}
-    
-    Return ONLY the complete updated python code wrapped inside a markdown block starting with ```python and ending with ```. Do not include any extra text.
-    """
-    
-    response = client.models.generate_content(
-        model='gemini-3.6-flash',
-        contents=prompt,
-    )
-    return response.text
-
-def start_self_healing_pipeline():
-    target_file = "sandbox/app.py"
-    max_attempts = 3
-    error_feedback = None
-    
-    print("====================================================")
-    print("🤖 STARTING AUTONOMOUS SELF-HEALING ENGINE (Gemini) 🤖")
-    print("====================================================\n")
-
-    for attempt in range(1, max_attempts + 1):
-        print(f"\n🔄 [ATTEMPT {attempt}/{max_attempts}] Reading codebase file...")
-        with open(target_file, "r") as f:
-            current_code = f.read()
-
-        print("🧠 AI is analyzing and designing the healing patch...")
-        ai_response = ask_ai_to_heal_code(current_code, error_feedback)
-        healed_code = extract_clean_code(ai_response)
-
-        with open(target_file, "w") as f:
-            f.write(healed_code)
-
-        is_success, runtime_error = run_automated_sandbox_test(target_file)
-
-        if is_success:
-            print(f"\n🎉 SUCCESS! Codebase successfully healed on attempt {attempt}.")
-            print("====================================================")
+    def apply_patch(self, file_path: str, patch_dict: dict) -> None:
+        if not patch_dict:
             return
-        else:
-            print(f"❌ Attempt {attempt} failed. Feedback loop triggered.")
-            error_feedback = runtime_error
+        with open(file_path, "r") as f:
+            content = f.read()
+        for old_line, new_line in patch_dict.items():
+            if old_line.strip() in content:
+                content = content.replace(old_line, new_line)
+        with open(file_path, "w") as f:
+            f.write(content)
 
-    print("\n🚨 PIPELINE ALERT: Unable to heal code automatically within max attempts.")
-    print("====================================================")
+# ====================================================
+# 🚀 MODULE 4: THE MASTER PIPELINE ORCHESTRATOR
+# ====================================================
+class PipelineOrchestrator:
+    def __init__(self, max_attempts: int = 3):
+        self.executor = SandboxExecutor()
+        self.analyzer = CodeAnalyzer()
+        self.healer = CodeHealer()
+        self.max_attempts = max_attempts
+
+    def run_healing_protocol(self, target_file: str):
+        print("====================================================")
+        print("🚀 OMNIHEAL PRO: TARGETED PATCHING ENGINE ACTIVE")
+        print("====================================================\n")
+        
+        for attempt in range(1, self.max_attempts + 1):
+            print(f"🔄 [ATTEMPT {attempt}/{self.max_attempts}] Running build validations...")
+            is_passed, stdout, stderr = self.executor.execute_file(target_file)
+            
+            if is_passed:
+                print(f"\n🎉 SUCCESS! Target stabilized autonomously on attempt {attempt}.")
+                print("====================================================")
+                return True
+                
+            print("⚠️ DETECTION: Runtime crash captured! Analyzing root cause...")
+            with open(target_file, "r") as f:
+                current_code = f.read()
+                
+            diagnosis = self.analyzer.diagnose_error(current_code, stderr)
+            print("🔧 REPAIR: Engineering dynamic target micro-patch...")
+            patch = self.healer.generate_patch(current_code, diagnosis)
+            print(f"📦 Patch Diff Generated: {patch}")
+            
+            self.healer.apply_patch(target_file, patch)
+            time.sleep(1)
+            
+        print("\n🚨 CRITICAL FAILURE: Circuit breaker triggered.")
+        return False
+
+# ====================================================
+# 🏃‍♂️ RUNTIME INTERFACE BOOTSTRAPPER
+# ====================================================
+if __name__ == "__main__":
+    target_app = "examples/buggy_app.py"
+    
+    # Target path safety handling
+    if not os.path.exists("examples"):
+        os.makedirs("examples")
+        
+    # Always reset the buggy target file to baseline for consistent demo results
+    buggy_code_content = """def process_fintech_transaction(data):
+    # Razorpay Killer Demo - Intentional ZeroDivisionError
+    risk_factor = 100 / 0
+    return f"Transaction metrics calculated: {risk_factor}"
 
 if __name__ == "__main__":
-    start_self_healing_pipeline()
+    print(process_fintech_transaction("Razorpay Secure User"))
+"""
+    with open(target_app, "w") as f:
+        f.write(buggy_code_content)
+
+    orchestrator = PipelineOrchestrator(max_attempts=3)
+    orchestrator.run_healing_protocol(target_app)
