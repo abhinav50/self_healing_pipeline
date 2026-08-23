@@ -1,41 +1,38 @@
-# 🤖 Autonomous Self-Healing Runtime Infrastructure for Fintech Applications
+# 🤖 Autonomous Self-Healing Runtime Infrastructure for Fintech Microservices
 
-An advanced, enterprise-grade AI DevOps automation engine built in Python that dynamically monitors software applications, isolates runtime regressions, validates targeted structural mutations, and executes asynchronous code recovery protocols completely hands-free.
-
----
-
-## 🏛️ Architectural Framework Design (V3)
-The engine moves away from simple linear text generation into a rigorous, cyclic **Stateful Micro-Patching Architecture Pattern**:
-
-1. **Detection Matrix:** Continuous telemetry hooks capture non-zero exit configurations using isolated process bounds (`ControlledRuntimeEnvironment`).
-2. **AI Structural Diagnosis:** Captures processing trace logs and channels raw binary dumps to Google Gemini-3.6-Flash intelligence layers to map root causes.
-3. **Targeted Micro-Patching (Diff Engine):** Avoids dangerous global file rewrites. Generates deterministic string replace-dictionaries mapping faulty instructions to verified safety wrappers.
-4. **Deterministic Token Validation:** Guarantees structural accuracy by ensuring the targeted patch matches uniquely within the codebase target file exactly once before committing mutations to disk.
-5. **Rollback State Machine:** Executes a strict post-patch compile test. If validation checks reject the AI mutation, the engine automatically rolls back changes to preserve system baseline safety indices.
+An advanced, production-ready AI DevOps engine built in Python that dynamically monitors processes, traps runtime traceback anomalies, validates micro-patch variations, and executes automated code recoveries completely hands-free.
 
 ---
 
-## 📈 Observability & Explainability Summary Matrix
-Equipped with absolute observability structures that parse dynamic JSON metrics upon workflow completion:
-* Root Cause Mapping Logs
-* Diff Modifications Engine (`[-] REMOVE` vs `[+] INSERT`)
-* Microservice Retries and Iteration States Tracking
-* State Node Circuit-Breakers
+## 🏛️ System Architecture Design Workflow (Version 5)
+
+The engine shifts away from simple raw text overwrites into a high-utility **Targeted Patch & Verification Loop Model**:
+
+```text
+Buggy Target App → Captured Runtime Monitor → AI Traceback Analysis → JSON Patch Validation Check → Inplace Diff Swap → Verification Re-run → [PASS / ROLLBACK Fallback Index]
+```
+
+### 🌟 Core Quality & Resiliency Upgrades:
+1. **Controlled Runtime Isolation Wording:** Operating within structured subprocess pipelines with timeout constraints (`ControlledRuntimeEnvironment`) instead of unprotected naked execution strings.
+2. **Deterministic Token Line Validation:** Prevents collateral code damage by ensuring the AI-generated old line uniquely matches exactly once inside the destination source code before mutating systems.
+3. **Automated Rollback State Machine:** If the AI patch triggers a secondary failure during the verification build re-test, the engine automatically rolls back changes to return system workspaces to safe baseline indexes.
+4. **Programmatic Test Suites:** Native test fixtures execute verification assertions before allowing runtime build clearance.
 
 ---
 
-## 🛠️ Environmental Safety Configuration
-* **Security Control:** 100% compliant with enterprise push protection rules. No tracking keys are hardcoded; infrastructure strictly tracks tokens via `os.environ` contexts.
-* **Technology Stack:** Python 3.12, Google GenAI core library distributions, OS process sandboxing interfaces.
+## 🛠️ Technology Stack & Requirements
+* **Core Language:** Python 3.12 Distribution
+* **Intelligence Layer:** Google GenAI SDK (`gemini-3.6-flash` Core Core Platform)
+* **Secret Protocol Management:** 100% compliant with enterprise push safety guidelines. Absolutely no hardcoded secrets inside repositories; variables are fetched straight from `os.environ` pipelines.
 
 ---
 
-## 🚀 Execution & Setup Quickstart
-1. Set up your active environment variables:
+## 🚀 Installation & Quickstart Execution
+1. Inject your active Google AI Studio token into your system environment context:
    ```bash
    export GEMINI_API_KEY="your_api_key_here"
    ```
-2. Fire up the pipeline execution bootstrapper engine:
+2. Run the platform bootstrapper entry file:
    ```bash
    python main.py
    ```

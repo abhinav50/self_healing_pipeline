@@ -6,7 +6,6 @@ class SandboxExecutor:
         self.timeout = timeout
 
     def execute_file(self, file_path: str) -> tuple[bool, str, str]:
-        """Runs the target Python script in an isolated subprocess container."""
         try:
             result = subprocess.run(
                 [sys.executable, file_path],
@@ -19,6 +18,6 @@ class SandboxExecutor:
             else:
                 return False, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
-            return False, "", "ERR_TIMEOUT: Code execution exceeded maximum time limit."
+            return False, "", "ERR_TIMEOUT: Limit exceeded."
         except Exception as e:
-            return False, "", f"ERR_SYSTEM: Runtime crash - {str(e)}"
+            return False, "", f"ERR_SYSTEM: {str(e)}"
