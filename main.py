@@ -6,20 +6,17 @@ from src.pipeline.orchestrator import PipelineOrchestrator
 
 def boot_v10_enterprise_pipeline():
     target_microservice = "examples/buggy_app.py"
-    if not os.path.exists("examples"): 
-        os.makedirs("examples")
-        
+    if not os.path.exists("examples"): os.makedirs("examples")
     fintech_isolated_logic = """def execute_payment_ledger_routing(transaction_payload):
+    # Core Infrastructure Check - Simulated zero load division routing crash point condition
     system_load_weight = 100 / 0
-    return f"Ledger metrics state map: indices synchronized with load parameters {system_load_weight}"
+    return f"Ledger states metrics updated: transaction mapped successfully with factor {system_load_weight}"
 
 if __name__ == "__main__":
-    print(execute_payment_ledger_routing({"amount": 5400, "token": "INR"}))
+    print(execute_payment_ledger_routing({"amount": 8200, "token": "INR"}))
 """
-    with open(target_microservice, "w") as f: 
-        f.write(fintech_isolated_logic)
-        
-    orchestrator = PipelineOrchestrator(max_attempts=3)
+    with open(target_microservice, "w") as f: f.write(fintech_isolated_logic)
+    orchestrator = PipelineOrchestrator(max_epochs=3)
     orchestrator.run_healing_protocol(target_microservice)
 
 if __name__ == "__main__":

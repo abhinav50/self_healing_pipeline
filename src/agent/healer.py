@@ -11,10 +11,12 @@ class CodeHealer:
         self.client = genai.Client(api_key=self.api_key)
 
     def generate_patch(self, code_content: str, diagnosis: str) -> dict:
+        """Generates a targeted replacement patch matrix dictionary instead of destructive rewrites."""
         prompt = f"""
-        You are a Senior Core Software Engineer. Generate a strict line-replacement JSON dictionary to fix the code regression.
+        [ENTERPRISE RESEARCH PARADIGM: TARGETED CODE SYNTHESIS]
+        Generate a precise line-replacement JSON dictionary to fix code regressions.
         Source Code: {code_content}
-        Core Diagnosis: {diagnosis}
+        Diagnosis Matrix: {diagnosis}
         Return ONLY valid JSON wrapped inside a ```json ``` markdown block mapping the exact old broken line string to the new safe replacement line string.
         """
         response = self.client.models.generate_content(
@@ -28,11 +30,12 @@ class CodeHealer:
         return {}
 
     def apply_patch_safely(self, file_path: str, patch_dict: dict) -> tuple[bool, str]:
+        """Applies line modifications ensuring strict 1:1 match boundaries to prevent corruption."""
         if not patch_dict: return False, "Patch schema evaluation returned empty parameters."
         with open(file_path, "r") as f: content = f.read()
         for old_line, new_line in patch_dict.items():
             occurrences = content.count(old_line)
-            if occurrences == 0: return False, f"Validation Aborted: Target pattern absent inside resource workspace."
+            if occurrences == 0: return False, f"Validation Aborted: Broken target pattern absent inside resource workspace."
             if occurrences > 1: return False, f"Validation Aborted: Multi-match variant error."
             print(f"\n⚡ VERSION 10 LIVE DESTRUCTIVE OVERWRITE PROTECTION INPLACE PARITY:")
             print(f"   [-] REMOVE LINE: '{old_line.strip()}'")
