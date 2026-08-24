@@ -1,38 +1,11 @@
-# 🤖 Autonomous Self-Healing Runtime Infrastructure for Fintech Microservices
+# 🤖 Autonomous Self-Healing Runtime Infrastructure for Fintech Microservices (V10)
 
-An advanced, production-ready AI DevOps engine built in Python that dynamically monitors processes, traps runtime traceback anomalies, validates micro-patch variations, and executes automated code recoveries completely hands-free.
-
----
-
-## 🏛️ System Architecture Design Workflow (Version 5)
-
-The engine shifts away from simple raw text overwrites into a high-utility **Targeted Patch & Verification Loop Model**:
-
-```text
-Buggy Target App → Captured Runtime Monitor → AI Traceback Analysis → JSON Patch Validation Check → Inplace Diff Swap → Verification Re-run → [PASS / ROLLBACK Fallback Index]
-```
-
-### 🌟 Core Quality & Resiliency Upgrades:
-1. **Controlled Runtime Isolation Wording:** Operating within structured subprocess pipelines with timeout constraints (`ControlledRuntimeEnvironment`) instead of unprotected naked execution strings.
-2. **Deterministic Token Line Validation:** Prevents collateral code damage by ensuring the AI-generated old line uniquely matches exactly once inside the destination source code before mutating systems.
-3. **Automated Rollback State Machine:** If the AI patch triggers a secondary failure during the verification build re-test, the engine automatically rolls back changes to return system workspaces to safe baseline indexes.
-4. **Programmatic Test Suites:** Native test fixtures execute verification assertions before allowing runtime build clearance.
+An advanced, enterprise-grade AI DevOps automation engine built in Python that dynamically monitors process streams, isolates runtime regressions, validates structured JSON diff micro-patches, and executes automated code state rollbacks completely hands-free.
 
 ---
 
-## 🛠️ Technology Stack & Requirements
-* **Core Language:** Python 3.12 Distribution
-* **Intelligence Layer:** Google GenAI SDK (`gemini-3.6-flash` Core Core Platform)
-* **Secret Protocol Management:** 100% compliant with enterprise push safety guidelines. Absolutely no hardcoded secrets inside repositories; variables are fetched straight from `os.environ` pipelines.
-
----
-
-## 🚀 Installation & Quickstart Execution
-1. Inject your active Google AI Studio token into your system environment context:
-   ```bash
-   export GEMINI_API_KEY="your_api_key_here"
-   ```
-2. Run the platform bootstrapper entry file:
-   ```bash
-   python main.py
-   ```
+## 🏛️ Architectural Framework Design (V10 Core)
+1. **Controlled Runtime Isolation:** Managed process threads with strict timeout monitoring controls.
+2. **Deterministic Token Line Validation:** Validates patch diff parity boundary bounds to prevent code corruption.
+3. **Automated Rollback State Machine:** Reverts mutations safely back to baseline safe indexes if verification re-tests fail.
+4. **Programmatic Assertion Monitoring:** Integrated automated suite layers tracking token lifecycles natively.

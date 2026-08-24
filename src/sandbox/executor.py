@@ -18,6 +18,6 @@ class SandboxExecutor:
             else:
                 return False, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
-            return False, "", "ERR_TIMEOUT: Limit exceeded."
+            return False, "", "ERR_TIMEOUT: System thread exceeded absolute timeout limits."
         except Exception as e:
-            return False, "", f"ERR_SYSTEM: {str(e)}"
+            return False, "", f"ERR_COMPILATION_CRASH: Base executor runtime crash - {str(e)}"
