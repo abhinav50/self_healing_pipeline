@@ -1,7 +1,7 @@
 import time
 import json
 from src.sandbox.executor import SandboxExecutor
-from src.agent.analyzer import CodeCodeAnalyzer if 'CodeCodeAnalyzer' in locals() else CodeAnalyzer
+from src.agent.analyzer import CodeAnalyzer
 from src.agent.healer import CodeHealer
 
 class EnterpriseSLOMonitor:
@@ -43,7 +43,8 @@ class PipelineOrchestrator:
                 return True
                 
             print("⚠️ FAULT DETECTION: Controlled runtime boundary trapped a process exception. Extracting buffers...")
-            with open(target_file, "r") as f: backup_state = f.read()
+            with open(target_file, "r") as f: 
+                backup_state = f.read()
             
             diagnosis = self.analyzer.diagnose_error(backup_state, stderr)
             print("🔧 REPAIR LAYER: Engineering dynamic token configuration patch mapping...")
@@ -55,7 +56,8 @@ class PipelineOrchestrator:
                 telemetry_logs_stream.append({"epoch": epoch, "status": "VALIDATION_FAILED", "latency_sec": run_duration})
                 continue
                 
-            with open(target_file, "r") as f: mutated_code = f.read()
+            with open(target_file, "r") as f: 
+                mutated_code = f.read()
             ast_passed, ast_msg = self.analyzer.verify_syntax_tree(mutated_code)
             
             if ast_passed:
@@ -63,12 +65,13 @@ class PipelineOrchestrator:
                 telemetry_logs_stream.append({"epoch": epoch, "status": "MUTATION_COMMITTED", "patch": patch, "latency_sec": run_duration, "slo_compliant": slo_passed})
             else:
                 print(f"❌ AST RUNTIME REJECTION: {ast_msg}. Rolling back changes...")
-                with open(target_file, "w") as f: f.write(backup_state)
+                with open(target_file, "w") as f: 
+                    f.write(backup_state)
                 print("⏪ FAULT DEACTIVATED: Local state rolled back safely to absolute baseline benchmarks.")
                 telemetry_logs_stream.append({"epoch": epoch, "status": "FAILED_AST_ROLLBACK", "patch": patch, "trace": ast_msg, "latency_sec": run_duration})
             time.sleep(1)
 
-        self.print_v10_observability_matrix("EPOCHS_EXHAUSTED_CIRCUIT_BREAKER", self.max_epochs, telemetry_logs_stream)
+        self.print_v10_observability_matrix("EPOCHS_EXHAUSTED_CIRCUIT_BREAKER", self.max_attempts, telemetry_logs_stream)
         return False
 
     def print_v10_observability_matrix(self, status: str, epochs: int, telemetry_logs: list):

@@ -1,0 +1,12 @@
+{
+  "metric_name": "self_healing_pipeline_execution_status",
+  "help_string": "Tracks the autonomous recovery loop optimization metrics thresholds",
+  "type": "gauge",
+  "telemetry_metrics": {
+    "uptime_status": "OPERATIONAL",
+    "service_level_objective_compliant": true,
+    "target_node": "examples.buggy_app",
+    "active_client_engine": "google-gemini-3.6-flash",
+    "hardware_isolation_boundary": "controlled-subprocess-wrapper"
+  }
+}
